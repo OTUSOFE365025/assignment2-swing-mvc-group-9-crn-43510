@@ -36,7 +36,7 @@ public class Controller {
 
     private void onScan() {
         try {
-            String upc = scanner.pickRandomUpc(model);
+            String upc = scanner.pickRandomUpc();
             model.addItemByUpc(upc);
             Product p = model.findByUpc(upc).get();
             view.addItemLine(formatItem(p));
