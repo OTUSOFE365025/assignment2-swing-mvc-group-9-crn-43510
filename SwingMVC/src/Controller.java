@@ -49,10 +49,16 @@ public class Controller {
     }
 
     private void onClear() {
-        model.clear();
-        view.resetList();
-        refreshTotals();
-    }
+		if (model.getScannedItems().size() >= 5) {
+			int res = JOptionPane.showConfirmDialog(view,
+					"Clear all scanned items?", "Confirm", JOptionPane.OK_CANCEL_OPTION);
+			if (res != JOptionPane.OK_OPTION) return;
+		}
+		model.clear();
+		view.resetList();
+		refreshTotals();
+	}
+	
 
     private void refreshTotals() {
         BigDecimal subtotal = model.getSubtotal();
