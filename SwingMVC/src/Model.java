@@ -13,8 +13,9 @@ public class Model {
             line = line.trim();
             if (line.isEmpty() || line.startsWith("#")) continue;
 
-            // Normalize "$ 8.32" -> "$8.32"
-            line = line.replaceAll("\\$\\s+(\\d)", "\\$$1");
+            // Before splitting, normalize: join "$ <num>" into "$<num>"
+			line = line.replaceAll("\\$\\s+(\\d)", "\\$$1");
+
 
             String[] parts = line.split("\\s+");
             if (parts.length < 3) continue;
