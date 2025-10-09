@@ -32,6 +32,9 @@ public class Model {
     }
 
     private List<String> readAllLines(String pathOrResource) {
+		// already implemented: tries filesystem first, then classpath "/products.txt"
+		// This commit documents that behavior; no code change if your current method matches.
+
         File f = new File(pathOrResource);
         try {
             if (f.exists()) {
