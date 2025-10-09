@@ -11,6 +11,7 @@ public class Scanner {
         for (Product p : model.getCatalog()) upcs.add(p.getUpc());
         if (upcs.isEmpty()) throw new IllegalStateException("Catalog is empty");
         String choice = upcs.get(rng.nextInt(upcs.size()));
+        // simple avoid immediate repeat
         if (lastUpc != null && upcs.size() > 1 && choice.equals(lastUpc)) {
             choice = upcs.get(rng.nextInt(upcs.size()));
         }
