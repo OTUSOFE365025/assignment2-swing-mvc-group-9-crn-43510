@@ -15,12 +15,10 @@ public class Product {
     public String getName() { return name; }
     public BigDecimal getPrice() { return price; }
 
-    @Override public String toString() {
-        return name + " (" + upc + ") - " + price;
-    }
     @Override public boolean equals(Object o) {
         if (!(o instanceof Product)) return false;
         return Objects.equals(upc, ((Product)o).upc);
     }
     @Override public int hashCode() { return Objects.hash(upc); }
+    @Override public String toString() { return name + " (" + upc + ") - " + price; }
 }

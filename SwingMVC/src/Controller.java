@@ -1,43 +1,66 @@
-import javax.swing.JOptionPane;
- 
+import javax.swing.*;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Controller {
-	 private Model model;
-	 private View view;
-	 
-	 public Controller(Model m, View v) {
-	  model = m;
-	  view = v;
-	  initView();
-	 }
-	 
-	 public void initView() {
-	  view.getFirstnameTextfield().setText(model.getFirstname());
-	  view.getLastnameTextfield().setText(model.getLastname());
-	 }
-	 
-	 public void initController() {
-	  view.getFirstnameSaveButton().addActionListener(e -> saveFirstname());
-	  view.getLastnameSaveButton().addActionListener(e -> saveLastname());
-	  view.getHello().addActionListener(e -> sayHello());
-	  view.getBye().addActionListener(e -> sayBye());
-	 }
-	 
-	 private void saveFirstname() {
-	  model.setFirstname(view.getFirstnameTextfield().getText());
-	  JOptionPane.showMessageDialog(null, "Firstname saved : " + model.getFirstname(), "Info", JOptionPane.INFORMATION_MESSAGE);
-	 }
-	 
-	 private void saveLastname() {
-	  model.setLastname(view.getLastnameTextfield().getText());
-	  JOptionPane.showMessageDialog(null, "Lastname saved : " + model.getLastname(), "Info", JOptionPane.INFORMATION_MESSAGE);
-	 }
-	 
-	 private void sayHello() {
-	  JOptionPane.showMessageDialog(null, "Hello " + model.getFirstname() + " " + model.getLastname(), "Info", JOptionPane.INFORMATION_MESSAGE);
-	 }
-	 
-	 private void sayBye() {
-	  System.exit(0);
-	 }
-	 
+    private final Model model;
+    private final View view;
+    private final Scanner scanner;
+    private final NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.CANADA);
+
+    public Controller(Model model, View view, Scanner scanner) {
+        this.model = model;
+        this.view = view;
+        this.scanner = scanner;
+        attachHandlers();
+        refreshTotals();
+    }
+
+    private void attachHandlers() {
+        view.getScanButton().addActionListener(e -> onScan());
+        view.getClearButton().addActionListener(e -> onClear());
+
+        // Keyboard shortcuts: Enter = Scan, Ctrl+L = Clear
+        JRootPane root = view.getRootPane();
+        root.setDefaultButton(view.getScanButton());
+        InputMap im = root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = root.getActionMap();
+        im.put(KeyStroke.getKeyStroke("control L"), "clear");
+        am.put("clear", new AbstractAction() {
+            @Override public void actionPerformed(java.awt.event.ActionEvent e) { onClear(); }
+        });
+    }
+
+    private void onScan() {
+        try {
+            String upc = scanner.pickRandomUpc(model);
+            model.addItemByUpc(upc);
+            Product p = model.findByUpc(upc).get();
+            view.addItemLine(formatItem(p));
+            refreshTotals();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(view, "Scan failed: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void onClear() {
+        model.clear();
+        view.resetList();
+        refreshTotals();
+    }
+
+    private void refreshTotals() {
+        BigDecimal subtotal = model.getSubtotal();
+        view.setSubtotalText("Subtotal: " + currency.format(subtotal));
+    }
+
+    private String formatItem(Product p) {
+        return p.getName() + " — " + currency.format(p.getPrice()) + "  [" + p.getUpc() + "]";
+    }
+
+    public void show() {
+        SwingUtilities.invokeLater(() -> view.setVisible(true));
+    }
 }

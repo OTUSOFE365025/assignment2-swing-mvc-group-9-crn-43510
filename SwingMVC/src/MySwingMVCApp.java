@@ -1,17 +1,25 @@
+import javax.swing.*;
 
 public class MySwingMVCApp {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Model model = new Model();
+                model.loadCatalog("products.txt");
+                if (model.getCatalog().isEmpty()) {
+                    throw new IllegalStateException("Catalog is empty after loading products.txt");
+                }
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		  // Assemble all the pieces of the MVC
-		  Model m = new Model("Sylvain", "Saurel");
-		  View v = new View("MVC with SSaurel");
-		  Controller c = new Controller(m, v);
-		  
-		  // create scanner
-		  Scanner scanner = new Scanner();
-		  
-		  c.initController();
-	}
-
+                View view = new View();            // no-arg constructor
+                Scanner scanner = new Scanner();    // our custom class
+                Controller controller = new Controller(model, view, scanner);
+                controller.show();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Startup failed: " + ex.getMessage() +
+                        "\nEnsure products.txt exists in the project root or on classpath.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
 }
