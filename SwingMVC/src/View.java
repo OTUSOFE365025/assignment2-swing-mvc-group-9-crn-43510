@@ -14,7 +14,6 @@ public class View extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
         itemList.setVisibleRowCount(12);
-        itemList.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         JScrollPane scroll = new JScrollPane(itemList);
 
         JPanel bottom = new JPanel(new BorderLayout());
@@ -34,6 +33,7 @@ public class View extends JFrame {
 
     public JButton getScanButton() { return scanButton; }
     public JButton getClearButton() { return clearButton; }
+    public JList<String> getItemList() { return itemList; }
 
     public void addItemLine(String line) {
         listModel.addElement(line);
