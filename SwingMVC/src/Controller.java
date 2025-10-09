@@ -18,8 +18,10 @@ public class Controller {
     }
 
     private void attachHandlers() {
+        // Buttons
         view.getScanButton().addActionListener(e -> onScan());
         view.getClearButton().addActionListener(e -> onClear());
+        view.getAddByUpcButton().addActionListener(e -> onAddByUpc());
 
         // Keyboard shortcuts: Enter = Scan, Ctrl+L = Clear
         JRootPane root = view.getRootPane();
@@ -28,10 +30,7 @@ public class Controller {
         ActionMap am = root.getActionMap();
         im.put(KeyStroke.getKeyStroke("control L"), "clear");
         am.put("clear", new AbstractAction() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                onClear();
-            }
+            @Override public void actionPerformed(java.awt.event.ActionEvent e) { onClear(); }
         });
     }
 
@@ -48,17 +47,31 @@ public class Controller {
         }
     }
 
+    private void onAddByUpc() {
+        try {
+            String upc = view.getEnteredUpc();
+            if (upc.isEmpty()) return;
+            model.addItemByUpc(upc);
+            Product p = model.findByUpc(upc).get();
+            view.addItemLine(formatItem(p));
+            refreshTotals();
+            view.clearUpcField();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(view, "Add by UPC failed: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void onClear() {
-		if (model.getScannedItems().size() >= 5) {
-			int res = JOptionPane.showConfirmDialog(view,
-					"Clear all scanned items?", "Confirm", JOptionPane.OK_CANCEL_OPTION);
-			if (res != JOptionPane.OK_OPTION) return;
-		}
-		model.clear();
-		view.resetList();
-		refreshTotals();
-	}
-	
+        if (model.getScannedItems().size() >= 5) {
+            int res = JOptionPane.showConfirmDialog(view,
+                    "Clear all scanned items?", "Confirm", JOptionPane.OK_CANCEL_OPTION);
+            if (res != JOptionPane.OK_OPTION) return;
+        }
+        model.clear();
+        view.resetList();
+        refreshTotals();
+    }
 
     private void refreshTotals() {
         BigDecimal subtotal = model.getSubtotal();
