@@ -13,6 +13,9 @@ public class View extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
+		itemList.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 13));
+
+
         itemList.setVisibleRowCount(12);
         JScrollPane scroll = new JScrollPane(itemList);
 

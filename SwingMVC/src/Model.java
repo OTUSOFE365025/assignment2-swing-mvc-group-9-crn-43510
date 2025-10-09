@@ -20,7 +20,7 @@ public class Model {
             if (parts.length < 3) continue;
 
             String upc = parts[0];
-            String rawPrice = parts[parts.length - 1].replace("$", "").replace(",", ""); 
+            String rawPrice = parts[parts.length - 1].replace("$", "").replace(",", "");
             BigDecimal price = new BigDecimal(rawPrice);
             String name = String.join(" ", Arrays.asList(parts).subList(1, parts.length - 1));
 
