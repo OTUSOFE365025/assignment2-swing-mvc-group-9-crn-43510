@@ -55,9 +55,11 @@ public class Model {
     public Optional<Product> findByUpc(String upc) { return Optional.ofNullable(catalog.get(upc)); }
 
     public void addItemByUpc(String upc) {
-        Product p = findByUpc(upc).orElseThrow(() -> new IllegalArgumentException("UPC not found in catalog: " + upc));
-        addItem(p);
-    }
+		Product p = findByUpc(upc).orElseThrow(() ->
+			new IllegalArgumentException("UPC not found in catalog: " + upc));
+		addItem(p);
+	}
+	
 
     public void addItem(Product p) {
         scanned.add(p);
