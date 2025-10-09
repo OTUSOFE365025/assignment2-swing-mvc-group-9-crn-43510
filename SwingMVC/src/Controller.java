@@ -28,7 +28,10 @@ public class Controller {
         ActionMap am = root.getActionMap();
         im.put(KeyStroke.getKeyStroke("control L"), "clear");
         am.put("clear", new AbstractAction() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent e) { onClear(); }
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                onClear();
+            }
         });
     }
 
