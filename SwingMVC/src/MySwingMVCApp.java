@@ -5,13 +5,11 @@ public class MySwingMVCApp {
         SwingUtilities.invokeLater(() -> {
             try {
                 Model model = new Model();
+                // In Eclipse/VS Code, this reads from project root; if you move file, keep the same name.
                 model.loadCatalog("products.txt");
-                if (model.getCatalog().isEmpty()) {
-                    throw new IllegalStateException("Catalog is empty after loading products.txt");
-                }
 
-                View view = new View();            // no-arg constructor
-                Scanner scanner = new Scanner();    // our custom class
+                View view = new View();
+                Scanner scanner = new Scanner();
                 Controller controller = new Controller(model, view, scanner);
                 controller.show();
             } catch (Exception ex) {
